@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاكي الملياردير | Billionaire Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        
+        <!-- Header -->
+        <header class="game-header">
+            <div class="logo">🏢 <span>محاكي الملياردير</span></div>
+            <div class="header-info">
+                <span id="active-booster" style="display: none; color: #FFD700; margin-left: 15px; font-weight: bold; text-shadow: 0 0 10px rgba(255,215,0,0.5);">⚡ x2 مسرّع (0s)</span>
+                <span class="rank-title" id="player-rank">مبتدئ في عالم الأعمال</span>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Wealth Card -->
+            <div class="wealth-card">
+                <h2>صافي الثروة</h2>
+                <div class="money-display">
+                    <span id="cash-amount">0</span>
+                    <span class="currency">$</span>
+                </div>
+                <div class="passive-income">
+                    الدخل التلقائي: <span id="income-per-second">0</span> $/ثانية
+                </div>
+                <div id="click-particles-container"></div>
+            </div>
+
+            <!-- Work Button -->
+            <div class="action-area">
+                <button id="work-btn" class="main-action-btn">
+                    <span class="btn-icon">💼</span>
+                    <div class="btn-text">
+                        <span class="title">اعقد صفقة</span>
+                        <span class="subtitle" id="click-power-text">+1 $ للضغطة</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Tab Content Panels (shown based on nav selection) -->
+            <div class="tab-panels">
+
+                <!-- Investments Tab -->
+                <div id="business-tab" class="tab-content active">
+                    <div class="tab-content-header">
+                        <h3>📈 الاستثمارات</h3>
+                        <p>اشترِ مشاريع لتحصل على دخل تلقائي كل ثانية</p>
+                    </div>
+                    <div class="items-list" id="business-list"></div>
+                </div>
+
+                <!-- Stocks Tab -->
+                <div id="stocks-tab" class="tab-content">
+                    <div class="tab-content-header">
+                        <h3>💹 سوق الأسهم</h3>
+                        <p>تداول الأسهم والعملات الرقمية لتحقيق أرباح سريعة</p>
+                    </div>
+                    <div class="items-list" id="stocks-list"></div>
+                </div>
+
+                <!-- Luxury Tab -->
+                <div id="luxury-tab" class="tab-content">
+                    <div class="tab-content-header">
+                        <h3>🚗 الرفاهية</h3>
+                        <p>اقتنِ ممتلكات فاخرة لزيادة قوة الضغطة</p>
+                    </div>
+                    <div class="items-list" id="luxury-list"></div>
+                </div>
+
+                <!-- Mini-Games Tab -->
+                <div id="minigames-tab" class="tab-content">
+                    <div class="tab-content-header">
+                        <h3>🎮 الألعاب المصغرة</h3>
+                        <p>العب واربح أموالاً إضافية!</p>
+                    </div>
+                    <div class="items-list" id="minigames-list">
+                        <!-- Apple Catcher -->
+                        <div class="item-card minigame-card">
+                            <div class="item-icon">🍎</div>
+                            <div class="item-info">
+                                <div class="item-name">مزرعة التفاح</div>
+                                <div class="item-desc">اجمع التفاح المتساقط لتحصل على أموال فورية!</div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-btn play-btn" id="start-apple-btn">العب الآن</button>
+                            </div>
+                        </div>
+                        <!-- Crash Plane -->
+                        <div class="item-card minigame-card">
+                            <div class="item-icon">✈️</div>
+                            <div class="item-info">
+                                <div class="item-name">مراهنة الطائرة</div>
+                                <div class="item-desc">اسحب أرباحك قبل أن تتحطم الطائرة!</div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-btn play-btn" id="open-crash-btn">راهن الآن</button>
+                            </div>
+                        </div>
+                        <!-- 3 Cups -->
+                        <div class="item-card minigame-card">
+                            <div class="item-icon">🥤</div>
+                            <div class="item-info">
+                                <div class="item-name">الأكواب الثلاثة</div>
+                                <div class="item-desc">خمّن الكوب الصحيح لتربح ×4!</div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-btn play-btn" id="open-cups-btn">راهن الآن</button>
+                            </div>
+                        </div>
+                        <!-- Coin Flip -->
+                        <div class="item-card minigame-card">
+                            <div class="item-icon">🪙</div>
+                            <div class="item-info">
+                                <div class="item-name">رمي العملة</div>
+                                <div class="item-desc">اختر صورة أو كتابة - ضاعف أموالك أو اخسرها!</div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-btn play-btn" id="open-coinflip-btn">العب الآن</button>
+                            </div>
+                        </div>
+                        <!-- Dice Roll -->
+                        <div class="item-card minigame-card">
+                            <div class="item-icon">🎲</div>
+                            <div class="item-info">
+                                <div class="item-name">رمي النرد</div>
+                                <div class="item-desc">خمّن الرقم الصحيح واربح ×6! أو خمّن فوق/تحت واربح ×2!</div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-btn play-btn" id="open-dice-btn">العب الآن</button>
+                            </div>
+                        </div>
+                        <!-- Slot Machine -->
+                        <div class="item-card minigame-card">
+                            <div class="item-icon">🎰</div>
+                            <div class="item-info">
+                                <div class="item-name">ماكينة الحظ</div>
+                                <div class="item-desc">ادر البكرات وطابق الرموز للفوز بمبالغ ضخمة!</div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-btn play-btn" id="open-slots-btn">العب الآن</button>
+                            </div>
+                        </div>
+                        <!-- Memory Cards -->
+                        <div class="item-card minigame-card">
+                            <div class="item-icon">🃏</div>
+                            <div class="item-info">
+                                <div class="item-name">بطاقات الذاكرة</div>
+                                <div class="item-desc">اقلب البطاقات وطابق الأزواج لتربح!</div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-btn play-btn" id="open-memory-btn">العب الآن</button>
+                            </div>
+                        </div>
+                        <!-- Wheel of Fortune -->
+                        <div class="item-card minigame-card">
+                            <div class="item-icon">🎡</div>
+                            <div class="item-info">
+                                <div class="item-name">عجلة الحظ</div>
+                                <div class="item-desc">أدر العجلة واربح جوائز عشوائية مجاناً! (مرة كل 5 دقائق)</div>
+                            </div>
+                            <div class="item-action">
+                                <button class="buy-btn play-btn" id="open-wheel-btn">أدر العجلة</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements Tab -->
+                <div id="achievements-tab" class="tab-content">
+                    <div class="tab-content-header">
+                        <h3>🏆 الإنجازات</h3>
+                        <p>أكمل التحديات لتحصل على مكافآت</p>
+                    </div>
+                    <div class="items-list" id="achievements-list"></div>
+                </div>
+
+                <!-- Leaderboard Tab -->
+                <div id="leaderboard-tab" class="tab-content">
+                    <div class="tab-content-header">
+                        <h3>🌍 المتصدرون</h3>
+                        <p>تنافس مع أثرياء العالم</p>
+                    </div>
+                    <div class="items-list" id="leaderboard-list"></div>
+                </div>
+
+                <!-- Stats & Sync Tab -->
+                <div id="stats-tab" class="tab-content">
+                    <div class="tab-content-header">
+                        <h3>📊 الإحصائيات والمزامنة</h3>
+                    </div>
+                    <div class="stats-card">
+                        <p>إجمالي النقرات: <span id="stat-total-clicks">0</span></p>
+                        <p>الوقت المقضي: <span id="stat-time-played">0د</span></p>
+                        <p>نقاط التقاعد: <span id="stat-prestige-points">0</span></p>
+                        <p>المضاعف الدائم: <span id="stat-prestige-mult">x1.00</span></p>
+                        <hr style="margin: 15px 0; border: 1px solid rgba(255,255,255,0.1);">
+                        <button id="prestige-btn" class="buy-btn" style="background: linear-gradient(45deg, var(--gold), #ffeb3b); color: #000; width: 100%; margin-bottom: 10px;">التقاعد (الورثة) 🔄</button>
+                        
+                        <hr style="margin: 15px 0; border: 1px solid rgba(255,255,255,0.1);">
+                        <h4 style="color: var(--gold); margin-bottom: 10px;">📲 مزامنة بين الأجهزة</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px;">انقل بيانات لعبتك بين الهاتف والحاسوب بدون سيرفرات!</p>
+                        <button id="export-btn" class="buy-btn" style="background: var(--accent); color:#fff; width: 100%; margin-bottom: 8px;">📤 تصدير البيانات (نسخ الكود)</button>
+                        <button id="import-btn" class="buy-btn" style="background: var(--green-money); color:#000; width: 100%; margin-bottom: 8px;">📥 استيراد البيانات (لصق الكود)</button>
+                        <button id="qr-export-btn" class="buy-btn" style="background: linear-gradient(45deg, #333, #555); color:#fff; width: 100%; margin-bottom: 10px;">📱 إنشاء QR Code للمزامنة</button>
+                        
+                        <hr style="margin: 15px 0; border: 1px solid rgba(255,255,255,0.1);">
+                        <button id="reset-game-btn" class="danger-btn">إعادة تشغيل اللعبة (حذف الحفظ)</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-target="business-tab">
+                <span class="nav-icon">📈</span>
+                <span class="nav-label">استثمار</span>
+            </button>
+            <button class="nav-btn" data-target="stocks-tab">
+                <span class="nav-icon">💹</span>
+                <span class="nav-label">أسهم</span>
+            </button>
+            <button class="nav-btn" data-target="luxury-tab">
+                <span class="nav-icon">🚗</span>
+                <span class="nav-label">رفاهية</span>
+            </button>
+            <button class="nav-btn" data-target="minigames-tab">
+                <span class="nav-icon">🎮</span>
+                <span class="nav-label">ألعاب</span>
+            </button>
+            <button class="nav-btn" data-target="achievements-tab">
+                <span class="nav-icon">🏆</span>
+                <span class="nav-label">إنجازات</span>
+            </button>
+            <button class="nav-btn" data-target="leaderboard-tab">
+                <span class="nav-icon">🌍</span>
+                <span class="nav-label">متصدرون</span>
+            </button>
+            <button class="nav-btn" data-target="stats-tab">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-label">إعدادات</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- ===================== MODALS ===================== -->
+
+    <!-- Apple Catcher Modal -->
+    <div id="minigame-overlay" class="minigame-modal" style="display: none;">
+        <div class="minigame-container">
+            <div class="minigame-header">
+                <h3>اجمع التفاح! 🍎</h3>
+                <div class="minigame-stats">
+                    <span>الوقت: <span id="mg-time">30</span>ث</span>
+                    <span>المال: <b id="mg-score" style="color:var(--green-money)">0$</b></span>
+                </div>
+            </div>
+            <div id="mg-area" class="minigame-area">
+                <div id="mg-basket">🧺</div>
+            </div>
+            <div class="minigame-footer">
+                <button id="close-mg-btn" class="danger-btn" style="margin-top:0;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crash Plane Modal -->
+    <div id="crash-overlay" class="minigame-modal" style="display: none;">
+        <div class="minigame-container" style="text-align: center; max-width: 400px;">
+            <div class="minigame-header"><h3>لعبة الطائرة ✈️</h3></div>
+            <div style="padding: 20px;">
+                <input type="number" id="crash-bet-input" placeholder="مبلغ الرهان ($)" class="bet-input" min="1">
+                <div class="crash-scene" id="crash-scene">
+                    <div class="crash-grid">
+                        <div class="axis-y"><span>5x</span><span>3x</span><span>2x</span></div>
+                        <div class="axis-x"><span>2s</span><span>4s</span><span>6s</span><span>8s</span></div>
+                    </div>
+                    <div class="crash-plane" id="crash-plane">✈️</div>
+                    <div class="crash-line" id="crash-line"></div>
+                </div>
+                <div id="crash-multiplier" class="crash-multiplier">1.00x</div>
+                <button id="crash-action-btn" class="main-action-btn" style="width:100%; justify-content:center; margin-top:20px;">
+                    <span class="btn-text"><span class="title">بدء الرهان</span></span>
+                </button>
+            </div>
+            <div class="minigame-footer">
+                <button id="close-crash-btn" class="danger-btn" style="margin-top:0;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3 Cups Modal -->
+    <div id="cups-overlay" class="minigame-modal" style="display: none;">
+        <div class="minigame-container" style="text-align: center; max-width: 500px;">
+            <div class="minigame-header"><h3>الأكواب الثلاثة 🥤</h3></div>
+            <div style="padding: 20px;">
+                <input type="number" id="cups-bet-input" placeholder="مبلغ الرهان ($)" class="bet-input" min="1">
+                <h4 id="cups-msg" style="margin: 15px 0; color: var(--text-secondary);">راهن لتبدأ اللعبة (الربح × 4)</h4>
+                <div class="cups-container-relative">
+                    <div class="cup" id="cup-0" data-index="0">🥤</div>
+                    <div class="cup" id="cup-1" data-index="1">🥤</div>
+                    <div class="cup" id="cup-2" data-index="2">🥤</div>
+                </div>
+                <button id="start-cups-btn" class="main-action-btn" style="width:100%; justify-content:center; margin-top:20px;">
+                    <span class="btn-text"><span class="title">خلط الأكواب</span></span>
+                </button>
+            </div>
+            <div class="minigame-footer">
+                <button id="close-cups-btn" class="danger-btn" style="margin-top:0;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coin Flip Modal -->
+    <div id="coinflip-overlay" class="minigame-modal" style="display: none;">
+        <div class="minigame-container" style="text-align: center; max-width: 420px;">
+            <div class="minigame-header"><h3>رمي العملة 🪙</h3></div>
+            <div style="padding: 20px;">
+                <input type="number" id="coinflip-bet-input" placeholder="مبلغ الرهان ($)" class="bet-input" min="1">
+                <div class="coin-display" id="coin-display">🪙</div>
+                <h4 id="coinflip-msg" style="margin: 15px 0; color: var(--text-secondary);">اختر صورة أو كتابة (ربح ×2)</h4>
+                <div class="coin-choices">
+                    <button class="coin-choice-btn" id="coin-heads">👑 صورة</button>
+                    <button class="coin-choice-btn" id="coin-tails">🦅 كتابة</button>
+                </div>
+            </div>
+            <div class="minigame-footer">
+                <button id="close-coinflip-btn" class="danger-btn" style="margin-top:0;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dice Roll Modal -->
+    <div id="dice-overlay" class="minigame-modal" style="display: none;">
+        <div class="minigame-container" style="text-align: center; max-width: 420px;">
+            <div class="minigame-header"><h3>رمي النرد 🎲</h3></div>
+            <div style="padding: 20px;">
+                <input type="number" id="dice-bet-input" placeholder="مبلغ الرهان ($)" class="bet-input" min="1">
+                <div class="dice-display" id="dice-display">🎲</div>
+                <h4 id="dice-msg" style="margin: 15px 0; color: var(--text-secondary);">خمّن الرقم (×6) أو فوق/تحت 3.5 (×2)</h4>
+                <div class="dice-choices">
+                    <div class="dice-row">
+                        <button class="dice-num-btn" data-num="1">1</button>
+                        <button class="dice-num-btn" data-num="2">2</button>
+                        <button class="dice-num-btn" data-num="3">3</button>
+                        <button class="dice-num-btn" data-num="4">4</button>
+                        <button class="dice-num-btn" data-num="5">5</button>
+                        <button class="dice-num-btn" data-num="6">6</button>
+                    </div>
+                    <div class="dice-row" style="margin-top: 10px;">
+                        <button class="dice-range-btn" id="dice-under">⬇️ تحت (1-3)</button>
+                        <button class="dice-range-btn" id="dice-over">⬆️ فوق (4-6)</button>
+                    </div>
+                </div>
+            </div>
+            <div class="minigame-footer">
+                <button id="close-dice-btn" class="danger-btn" style="margin-top:0;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slot Machine Modal -->
+    <div id="slots-overlay" class="minigame-modal" style="display: none;">
+        <div class="minigame-container" style="text-align: center; max-width: 450px;">
+            <div class="minigame-header"><h3>ماكينة الحظ 🎰</h3></div>
+            <div style="padding: 20px;">
+                <input type="number" id="slots-bet-input" placeholder="مبلغ الرهان ($)" class="bet-input" min="1">
+                <div class="slots-machine">
+                    <div class="slot-reel" id="reel-0">🍒</div>
+                    <div class="slot-reel" id="reel-1">🍒</div>
+                    <div class="slot-reel" id="reel-2">🍒</div>
+                </div>
+                <h4 id="slots-msg" style="margin: 15px 0; color: var(--text-secondary);">3 متطابقة = ×10 | 2 متطابقة = ×3</h4>
+                <button id="spin-slots-btn" class="main-action-btn" style="width:100%; justify-content:center; margin-top:10px;">
+                    <span class="btn-text"><span class="title">أدر البكرات!</span></span>
+                </button>
+            </div>
+            <div class="minigame-footer">
+                <button id="close-slots-btn" class="danger-btn" style="margin-top:0;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Memory Cards Modal -->
+    <div id="memory-overlay" class="minigame-modal" style="display: none;">
+        <div class="minigame-container" style="text-align: center; max-width: 500px;">
+            <div class="minigame-header">
+                <h3>بطاقات الذاكرة 🃏</h3>
+                <div class="minigame-stats">
+                    <span>المحاولات: <b id="memory-moves">0</b></span>
+                    <span>الأزواج: <b id="memory-pairs" style="color:var(--green-money)">0/6</b></span>
+                </div>
+            </div>
+            <div class="memory-grid" id="memory-grid"></div>
+            <div class="minigame-footer">
+                <button id="close-memory-btn" class="danger-btn" style="margin-top:0;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wheel of Fortune Modal -->
+    <div id="wheel-overlay" class="minigame-modal" style="display: none;">
+        <div class="minigame-container" style="text-align: center; max-width: 450px;">
+            <div class="minigame-header"><h3>عجلة الحظ 🎡</h3></div>
+            <div style="padding: 20px;">
+                <div class="wheel-container">
+                    <div class="wheel-pointer">▼</div>
+                    <canvas id="wheel-canvas" width="300" height="300"></canvas>
+                </div>
+                <h4 id="wheel-msg" style="margin: 15px 0; color: var(--text-secondary);">أدر مجاناً! (مرة كل 5 دقائق)</h4>
+                <button id="spin-wheel-btn" class="main-action-btn" style="width:100%; justify-content:center; margin-top:10px;">
+                    <span class="btn-text"><span class="title">أدر العجلة!</span></span>
+                </button>
+            </div>
+            <div class="minigame-footer">
+                <button id="close-wheel-btn" class="danger-btn" style="margin-top:0;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="import-overlay" class="minigame-modal" style="display: none;">
+        <div class="minigame-container" style="text-align: center; max-width: 450px;">
+            <div class="minigame-header"><h3>📥 استيراد البيانات</h3></div>
+            <div style="padding: 20px;">
+                <textarea id="import-textarea" placeholder="الصق كود الحفظ هنا..." style="width:100%; height:120px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,215,0,0.3); color:var(--gold); font-size:1rem; border-radius:8px; padding:10px; resize:none;"></textarea>
+                <button id="confirm-import-btn" class="main-action-btn" style="width:100%; justify-content:center; margin-top:15px;">
+                    <span class="btn-text"><span class="title">تأكيد الاستيراد</span></span>
+                </button>
+            </div>
+            <div class="minigame-footer">
+                <button id="close-import-btn" class="danger-btn" style="margin-top:0;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div id="qr-overlay" class="minigame-modal" style="display: none;">
+        <div class="minigame-container" style="text-align: center; max-width: 400px;">
+            <div class="minigame-header"><h3>📱 QR Code للمزامنة</h3></div>
+            <div style="padding: 20px;">
+                <canvas id="qr-canvas" width="250" height="250" style="background:#fff; border-radius:8px; margin:0 auto; display:block;"></canvas>
+                <p style="margin-top:15px; color:var(--text-secondary); font-size:0.85rem;">امسح هذا الكود من جهازك الآخر لاستيراد بيانات اللعبة</p>
+            </div>
+            <div class="minigame-footer">
+                <button id="close-qr-btn" class="danger-btn" style="margin-top:0;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/features.js"></script>
+    <script src="js/minigames.js"></script>
+    <script src="js/sync.js"></script>
+</body>
+</html>
