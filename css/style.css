@@ -156,6 +156,39 @@ body {
     opacity: 0.8;
 }
 
+/* Sub-Tabs (Managers/Upgrades) */
+.sub-tabs {
+    display: flex;
+    gap: 5px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.sub-tab-btn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sub-tab-btn.active {
+    background: var(--gold);
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.sub-content {
+    animation: fadeIn 0.3s ease;
+}
+
 /* ============================================= */
 /* Bottom Navigation Bar */
 /* ============================================= */
@@ -760,8 +793,281 @@ body {
 }
 
 /* ============================================= */
-/* Memory Cards */
+/* Professional Trading Terminal (Stocks V2) */
 /* ============================================= */
+.trading-terminal {
+    display: flex;
+    height: 500px;
+    background: rgba(10, 10, 20, 0.4);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.terminal-sidebar {
+    width: 150px;
+    border-left: 1px solid rgba(255, 215, 0, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.stocks-sidebar-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.sidebar-stock-item {
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-stock-item:hover {
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.sidebar-stock-item.active {
+    background: rgba(255, 215, 0, 0.1);
+    border-right: 3px solid var(--gold);
+}
+
+.ss-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.ss-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.ss-price {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.ss-trend {
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.terminal-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    background: radial-gradient(circle at center, rgba(108, 99, 255, 0.05), transparent);
+}
+
+.stock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.stock-title-info h2 {
+    font-size: 1.4rem;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.stock-price-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#active-stock-price {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--gold);
+}
+
+.trend-up { color: var(--green-money); }
+.trend-down { color: var(--red-danger); }
+
+.chart-container {
+    flex: 1;
+    min-height: 200px;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.chart-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.trading-actions {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.trading-buttons {
+    display: flex;
+    gap: 10px;
+    width: 200px;
+}
+
+/* ============================================= */
+/* Dialogue & Meetings System */
+/* ============================================= */
+.dialogue-container {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid var(--gold);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8);
+    animation: zoomIn 0.3s ease;
+}
+
+.npc-profile {
+    display: flex;
+    padding: 20px;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,215,0,0.2);
+    align-items: center;
+    gap: 15px;
+}
+
+.npc-avatar {
+    width: 60px;
+    height: 60px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    box-shadow: 0 0 15px rgba(255,215,0,0.3);
+}
+
+.npc-info h3 {
+    color: var(--gold);
+    margin-bottom: 2px;
+}
+
+.npc-info span {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.dialogue-box {
+    padding: 25px;
+}
+
+.dialogue-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #fff;
+    margin-bottom: 25px;
+    min-height: 60px;
+}
+
+.dialogue-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dialogue-option-btn {
+    background: rgba(108, 99, 255, 0.1);
+    border: 1px solid var(--accent);
+    color: #fff;
+    padding: 12px 15px;
+    border-radius: 10px;
+    text-align: right;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+}
+
+.dialogue-option-btn:hover {
+    background: var(--accent);
+    transform: translateX(-5px);
+}
+
+/* ============================================= */
+/* UI Toggle Switch */
+/* ============================================= */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #333;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider { background-color: var(--accent); }
+input:checked + .slider:before { transform: translateX(20px); }
+.slider.round { border-radius: 20px; }
+.slider.round:before { border-radius: 50%; }
+
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 600px) {
+    .trading-terminal {
+        flex-direction: column;
+        height: auto;
+    }
+    .terminal-sidebar {
+        width: 100%;
+        height: 100px;
+        border-left: none;
+        border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    }
+    .stocks-sidebar-list {
+        display: flex;
+        overflow-x: auto;
+    }
+    .sidebar-stock-item {
+        min-width: 120px;
+        border-bottom: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.03);
+    }
+}
 .memory-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

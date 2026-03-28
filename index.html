@@ -6,6 +6,8 @@
     <title>محاكي الملياردير | Billionaire Simulator</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="game-container">
@@ -35,6 +37,17 @@
                 <div id="click-particles-container"></div>
             </div>
 
+            <!-- Daily Quests Panel -->
+            <div class="daily-quests-card" id="daily-quests-panel" style="background: linear-gradient(135deg, rgba(20,20,30,0.8), rgba(15,15,40,0.9)); border: 1px solid rgba(255,215,0,0.2); border-radius: 12px; margin: 15px; padding: 15px; text-align: right;">
+                <h3 style="color: var(--gold); margin-bottom: 10px; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span>📋 المهام اليومية</span>
+                    <span id="quests-timer" style="color: var(--text-secondary); font-size: 0.8rem;">يتم التحديث غداً</span>
+                </h3>
+                <div id="quests-list" style="display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Quests injected by JS -->
+                </div>
+            </div>
+
             <!-- Work Button -->
             <div class="action-area">
                 <button id="work-btn" class="main-action-btn">
@@ -51,20 +64,97 @@
 
                 <!-- Investments Tab -->
                 <div id="business-tab" class="tab-content active">
-                    <div class="tab-content-header">
-                        <h3>📈 الاستثمارات</h3>
-                        <p>اشترِ مشاريع لتحصل على دخل تلقائي كل ثانية</p>
+                    <div class="tab-content-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3>📈 الاستثمارات</h3>
+                            <p>اشترِ مشاريع لتحصل على دخل</p>
+                        </div>
+                        <div class="sub-tabs">
+                            <button class="sub-tab-btn active" data-sub="businesses">المشاريع</button>
+                            <button class="sub-tab-btn" data-sub="realestate">العقارات 🏡</button>
+                            <button class="sub-tab-btn" data-sub="managers">المدراء 👔</button>
+                            <button class="sub-tab-btn" data-sub="upgrades">الترقيات ⬆️</button>
+                        </div>
                     </div>
-                    <div class="items-list" id="business-list"></div>
+                    
+                    <div id="sub-businesses" class="sub-content active">
+                        <div class="items-list" id="business-list"></div>
+                    </div>
+                    
+                    <div id="sub-realestate" class="sub-content" style="display: none;">
+                        <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-around; border: 1px solid rgba(255,215,0,0.2);">
+                            <div style="text-align: center;">
+                                <div style="color: var(--text-secondary); font-size: 0.8rem;">إجمالي الأرض</div>
+                                <div style="color: var(--gold); font-weight: bold;"><span id="total-land">0</span> م²</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="color: var(--text-secondary); font-size: 0.8rem;">الأرض المتاحة</div>
+                                <div style="color: var(--green-money); font-weight: bold;"><span id="available-land">0</span> م²</div>
+                            </div>
+                        </div>
+                        <div class="items-list" id="realestate-list"></div>
+                    </div>
+                    
+                    <div id="sub-managers" class="sub-content" style="display: none;">
+                        <p style="color: var(--text-secondary); margin-bottom: 10px; font-size: 0.9rem;">عيّن مدراء لتشغيل مشاريعك تلقائياً أثناء غيابك!</p>
+                        <div class="items-list" id="managers-list"></div>
+                    </div>
+                    
+                    <div id="sub-upgrades" class="sub-content" style="display: none;">
+                        <p style="color: var(--text-secondary); margin-bottom: 10px; font-size: 0.9rem;">اشترِ ترقيات لمضاعفة أرباح مشاريعك بشكل دائم!</p>
+                        <div class="items-list" id="upgrades-list"></div>
+                    </div>
                 </div>
 
-                <!-- Stocks Tab -->
+                <!-- Stocks Tab (Professional Trading Terminal) -->
                 <div id="stocks-tab" class="tab-content">
-                    <div class="tab-content-header">
-                        <h3>💹 سوق الأسهم</h3>
-                        <p>تداول الأسهم والعملات الرقمية لتحقيق أرباح سريعة</p>
+                    <div class="trading-terminal">
+                        <div class="terminal-sidebar">
+                            <h4 style="color:var(--gold);margin-bottom:10px;padding:5px;">📋 قائمة السوق</h4>
+                            <div class="stocks-sidebar-list" id="stocks-sidebar-list">
+                                <!-- Sidebar stock items injected by JS -->
+                            </div>
+                        </div>
+                        <div class="terminal-main">
+                            <div class="stock-header">
+                                <div class="stock-title-info">
+                                    <h2 id="active-stock-name">S&P 500</h2>
+                                    <div class="stock-price-row">
+                                        <span id="active-stock-price">0.00$</span>
+                                        <span id="active-stock-trend" class="trend-up">▲ 0.00%</span>
+                                    </div>
+                                </div>
+                                <div class="chart-controls">
+                                    <label class="switch">
+                                        <input type="checkbox" id="toggle-sma">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <span style="font-size:0.8rem;color:var(--text-secondary);">مؤشر SMA</span>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="stock-chart"></canvas>
+                            </div>
+                            <div class="trading-actions">
+                                <div class="owned-info">مملوك: <b id="active-stock-owned">0</b> سهم</div>
+                                <div class="trading-buttons">
+                                    <button class="buy-btn" onclick="buyStock(gameData.selectedStockId)" style="flex:1;">شراء</button>
+                                    <button class="danger-btn" onclick="sellStock(gameData.selectedStockId)" style="flex:1;margin-top:0;">بيع</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="items-list" id="stocks-list"></div>
+                </div>
+
+                <!-- Meetings Tab -->
+                <div id="meetings-tab" class="tab-content">
+                    <div class="tab-content-header">
+                        <h3>🤝 اجتماعات الأعمال</h3>
+                        <p>تواصل مع كبار المستثمرين لعقد صفقات رابحة</p>
+                    </div>
+                    <div class="items-list" id="meetings-list">
+                        <!-- Meetings injected by JS -->
+                    </div>
                 </div>
 
                 <!-- Luxury Tab -->
@@ -245,6 +335,10 @@
             <button class="nav-btn" data-target="leaderboard-tab">
                 <span class="nav-icon">🌍</span>
                 <span class="nav-label">متصدرون</span>
+            </button>
+            <button class="nav-btn" data-target="meetings-tab">
+                <span class="nav-icon">🤝</span>
+                <span class="nav-label">اجتماعات</span>
             </button>
             <button class="nav-btn" data-target="stats-tab">
                 <span class="nav-icon">⚙️</span>
@@ -434,10 +528,25 @@
         <div class="minigame-container" style="text-align: center; max-width: 450px;">
             <div class="minigame-header"><h3>📥 استيراد البيانات</h3></div>
             <div style="padding: 20px;">
-                <textarea id="import-textarea" placeholder="الصق كود الحفظ هنا..." style="width:100%; height:120px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,215,0,0.3); color:var(--gold); font-size:1rem; border-radius:8px; padding:10px; resize:none;"></textarea>
-                <button id="confirm-import-btn" class="main-action-btn" style="width:100%; justify-content:center; margin-top:15px;">
-                    <span class="btn-text"><span class="title">تأكيد الاستيراد</span></span>
-                </button>
+                <textarea id="import-textarea" placeholder="الصق كود الحفظ هنا..." style="width:100%; height:100px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,215,0,0.3); color:var(--gold); font-size:1rem; border-radius:8px; padding:10px; resize:none;"></textarea>
+                
+                <div id="scanner-container" style="display: none; margin-top: 15px; position: relative; border-radius: 12px; overflow: hidden; border: 2px solid var(--gold);">
+                    <video id="scanner-video" style="width: 100%; display: block;"></video>
+                    <canvas id="scanner-canvas" style="display: none;"></canvas>
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 2px solid rgba(255,215,0,0.5); box-sizing: border-box; pointer-events: none; display: flex; align-items: center; justify-content: center;">
+                        <div style="width: 200px; height: 200px; border: 2px solid var(--gold); box-shadow: 0 0 0 1000px rgba(0,0,0,0.5);"></div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button id="confirm-import-btn" class="main-action-btn" style="flex: 1; justify-content: center;">
+                        <span class="btn-text"><span class="title">تأكيد الاستيراد</span></span>
+                    </button>
+                    <button id="start-scan-btn" class="main-action-btn" style="flex: 1; justify-content: center; background: var(--accent);">
+                        <span class="btn-text"><span class="title">📷 مسح QR</span></span>
+                    </button>
+                </div>
+                <button id="stop-scan-btn" class="danger-btn" style="display: none; width: 100%; margin-top: 10px;">إيقاف الكاميرا</button>
             </div>
             <div class="minigame-footer">
                 <button id="close-import-btn" class="danger-btn" style="margin-top:0;">إلغاء</button>
@@ -459,9 +568,30 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+    <!-- Dialogue Overlay -->
+    <div id="dialogue-overlay" class="minigame-modal" style="display: none;">
+        <div class="dialogue-container">
+            <div class="npc-profile">
+                <div class="npc-avatar" id="npc-avatar">👔</div>
+                <div class="npc-info">
+                    <h3 id="npc-name">كبار المستثمرين</h3>
+                    <span id="npc-rank">رئيس تنفيذي</span>
+                </div>
+            </div>
+            <div class="dialogue-box">
+                <div class="dialogue-text" id="dialogue-text">...</div>
+                <div class="dialogue-options" id="dialogue-options">
+                    <!-- Options injected by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js" crossorigin="anonymous"></script>
+    <script src="js/audio.js"></script>
     <script src="js/game.js"></script>
     <script src="js/features.js"></script>
+    <script src="js/meetings.js"></script>
     <script src="js/minigames.js"></script>
     <script src="js/sync.js"></script>
 </body>
